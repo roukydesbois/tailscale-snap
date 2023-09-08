@@ -1,6 +1,6 @@
 name: tailscale
-base: core20
-version: 1.22.1
+base: core22
+version: 1.48.1
 grade: stable
 confinement: devmode
 summary: The easiest, most secure way to use WireGuard and 2FA
@@ -25,12 +25,17 @@ apps:
       - network
       - network-bind
       - network-control
+      - process-control
 
 parts:
   tailscale:
-    source: https://github.com/tailscale/tailscale.git
-    source-tag: v$SNAPCRAFT_PROJECT_VERSION
     plugin: go
+    source: https://github.com/tailscale/tailscale.git
+    source-type: git
+    source-tag: v$SNAPCRAFT_PROJECT_VERSION
+    build-snaps:
+      - go
     override-build: |
       sed -i paths/paths.go -e 's|"/var/run/tailscale/tailscaled.sock"|filepath.Join(os.Getenv("SNAP_DATA"), "tailscaled.sock")|'
       snapcraftctl build
+
